@@ -4,3 +4,9 @@ transfer
 6
 dea
 transfer
+5
+dea
+transfer
+2
+adalah
+Pembukaan Rekening
