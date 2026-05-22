@@ -1,6 +1,6 @@
-2
-adalah
-Pembukaan Rekening
+4
+gila
+Tarik Tunai
 5
 dea
 transfer
@@ -10,6 +10,9 @@ transfer
 6
 dea
 transfer
-4
-gila
+13
+fakih
 Tarik Tunai
+17
+hilman
+Pembukaan Rekening

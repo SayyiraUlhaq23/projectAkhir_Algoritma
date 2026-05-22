@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <ctime>
 using namespace std;
 
 struct Node {
@@ -13,6 +14,38 @@ struct Node {
 
 Node* head = NULL;
 Node* tail = NULL;
+
+int hitungTotalAntrian() {
+
+    int total = 0;
+    Node* bantu = head;
+
+    while (bantu != NULL) {
+
+        total++;
+        bantu = bantu->next;
+    }
+
+    return total;
+}
+
+void tampilTanggalJam() {
+
+    time_t now = time(0);
+    tm* waktu = localtime(&now);
+
+    cout << "Tanggal : "
+         << waktu->tm_mday << "/"
+         << waktu->tm_mon + 1 << "/"
+         << waktu->tm_year + 1900 << endl;
+
+    cout << "Jam     : "
+         << setw(2) << setfill('0') << waktu->tm_hour << ":"
+         << setw(2) << setfill('0') << waktu->tm_min << ":"
+         << setw(2) << setfill('0') << waktu->tm_sec << endl;
+
+    cout << setfill(' ');
+}
 
 void simpanKeFile() {
 
@@ -51,6 +84,7 @@ void bacaFile() {
         getline(file, baru->layanan);
 
         if (file.fail()) {
+
             delete baru;
             break;
         }
@@ -94,9 +128,9 @@ void tambahAntrian() {
     Node* baru = new Node;
     int pilihanLayanan;
 
-    cout << "\n====================================" << endl;
-    cout << "         TAMBAH ANTRIAN             " << endl;
-    cout << "====================================" << endl;
+    cout << "\n==================================================" << endl;
+    cout << "                 TAMBAH ANTRIAN                   " << endl;
+    cout << "==================================================" << endl;
 
     cout << "Nomor Antrian : ";
     cin >> baru->nomorAntrian;
@@ -114,12 +148,12 @@ void tambahAntrian() {
     cout << "Nama Nasabah  : ";
     getline(cin, baru->nama);
 
-    cout << "\n========== JENIS LAYANAN ==========" << endl;
+    cout << "\n=============== JENIS LAYANAN ===================" << endl;
     cout << "1. Transfer" << endl;
     cout << "2. Setor Tunai" << endl;
     cout << "3. Tarik Tunai" << endl;
     cout << "4. Pembukaan Rekening" << endl;
-    cout << "===================================" << endl;
+    cout << "==================================================" << endl;
     cout << "Pilih Layanan : ";
     cin >> pilihanLayanan;
 
@@ -172,6 +206,12 @@ void tampilAntrian() {
     cout << "                  SISTEM ANTRIAN BANK                       " << endl;
     cout << "============================================================" << endl;
 
+    tampilTanggalJam();
+
+    cout << "Total Antrian : " << hitungTotalAntrian() << endl;
+
+    cout << "============================================================" << endl;
+
     cout << left
          << setw(15) << "No Antrian"
          << setw(25) << "Nama Nasabah"
@@ -197,6 +237,35 @@ void tampilAntrian() {
     }
 
     cout << "============================================================" << endl;
+    cout << "        Terima Kasih Telah Menggunakan Sistem               " << endl;
+    cout << "============================================================" << endl;
+}
+
+void hapusAntrian() {
+
+    if (head == NULL) {
+
+        cout << "\nAntrian masih kosong.\n";
+        return;
+    }
+
+    Node* hapus = head;
+
+    cout << "\nAntrian dengan nomor "
+         << hapus->nomorAntrian
+         << " berhasil diproses.\n";
+
+    head = head->next;
+
+    if (head != NULL) {
+        head->prev = NULL;
+    } else {
+        tail = NULL;
+    }
+
+    delete hapus;
+
+    simpanKeFile();
 }
 
 void cariAntrian() {
@@ -205,9 +274,9 @@ void cariAntrian() {
     int cari;
     bool ditemukan = false;
 
-    cout << "\n====================================" << endl;
-    cout << "          CARI ANTRIAN              " << endl;
-    cout << "====================================" << endl;
+    cout << "\n==================================================" << endl;
+    cout << "                  CARI ANTRIAN                    " << endl;
+    cout << "==================================================" << endl;
 
     cout << "Masukkan Nomor Antrian : ";
     cin >> cari;
@@ -216,7 +285,7 @@ void cariAntrian() {
 
         if (bantu->nomorAntrian == cari) {
 
-            cout << "\n========== DATA DITEMUKAN ==========" << endl;
+            cout << "\n=============== DATA DITEMUKAN ==================" << endl;
 
             cout << "Nomor Antrian : " << bantu->nomorAntrian << endl;
             cout << "Nama Nasabah  : " << bantu->nama << endl;
@@ -308,8 +377,8 @@ void quickSortRekursif(Node* low, Node* high) {
 
     if (low != NULL &&
         high != NULL &&
-        low != high->next &&
-        low != high) {
+        low != high &&
+        low != high->next) {
 
         Node* pivot = partition(low, high);
 
@@ -351,14 +420,19 @@ int main() {
     do {
 
         cout << "\n==================================================" << endl;
-        cout << "           SISTEM ANTRIAN BANK                    " << endl;
+        cout << "               SISTEM ANTRIAN BANK                " << endl;
+        cout << "==================================================" << endl;
+
+        tampilTanggalJam();
+
         cout << "==================================================" << endl;
         cout << "1. Tambah Antrian" << endl;
         cout << "2. Tampilkan Antrian" << endl;
         cout << "3. Cari Antrian" << endl;
         cout << "4. Bubble Sort" << endl;
         cout << "5. Quick Sort" << endl;
-        cout << "6. Keluar" << endl;
+        cout << "6. Hapus Antrian" << endl;
+        cout << "7. Keluar" << endl;
         cout << "==================================================" << endl;
         cout << "Pilih Menu : ";
         cin >> pilih;
@@ -386,16 +460,20 @@ int main() {
                 break;
 
             case 6:
-                cout << "\n==================================" << endl;
-                cout << "      PROGRAM TELAH SELESAI       " << endl;
-                cout << "==================================" << endl;
+                hapusAntrian();
+                break;
+
+            case 7:
+                cout << "\n==================================================" << endl;
+                cout << "           PROGRAM TELAH SELESAI                  " << endl;
+                cout << "==================================================" << endl;
                 break;
 
             default:
                 cout << "\nMenu tidak tersedia.\n";
         }
 
-    } while (pilih != 6);
+    } while (pilih != 7);
 
     return 0;
 }
